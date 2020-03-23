@@ -1,0 +1,4 @@
+OSError: encoder error -2 when writing image file
+캔버스가 65500 높이 넘어가는 데
+canvas.save( './result/' + 'merged.jpg')
+이거 실행해서
