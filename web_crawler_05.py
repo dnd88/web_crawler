@@ -10,16 +10,16 @@ from PIL import Image as PILImage
 img_dir = './img'
 result_img_dir = './result'
 
-result_name = '좀비딸'
-url = 'https://comic.naver.com/webtoon/detail.nhn?titleId=715772&no=1&weekday=thu'
-img_unit = 20 # 이미지 병합 단위
+result_name = '고수'
+url = 'https://comic.naver.com/webtoon/detail.nhn?titleId=662774&no=1&weekday=wed'
+IMG_UNIT = 10 # 이미지 병합 단위
 
 file_list = []
-# ep_num = int(url.split('&')[1][3:]) # 회차
-ep_start_num = 1
-ep_last_num = 3
+
+ep_start_num = 10
+ep_last_num = 11
 ep_num_list = list(range(ep_start_num, ep_last_num+1))
-ep_url = url.split('&')[0] + '&' + 'no=' + str(ep_start_num) + '&' + url.split('&')[2]
+
 
 # img 디렉토리 만들것
 def check_dir():
@@ -73,7 +73,7 @@ def run_crawler(ep_url):
 # Maximum supported image dimension is 65500 pixels :: JPG 이미지 한계임
 
 
-def merge_img(file_list = file_list, img_unit = 20, quotient = 'none', remainder = 'none', ep_num = 0):
+def merge_img(file_list = file_list, img_unit = IMG_UNIT, start_point = 0, quotient = 'none', remainder = 'none', ep_num = 0):
     cnt = 0
     # 차례대로 이미지를 저장할 리스트 생성
     image_list = []
@@ -84,8 +84,10 @@ def merge_img(file_list = file_list, img_unit = 20, quotient = 'none', remainder
     if remainder != 'none':
         img_unit = remainder
 
-    for file in file_list[i * img_unit : i * img_unit + img_unit]: # 합칠 이미지 단위 만큼만
-
+    print('스타트: ' + str(start_point * IMG_UNIT))
+    print('끝: ' + str(start_point * IMG_UNIT + img_unit))
+    for file in file_list[start_point * IMG_UNIT : start_point * IMG_UNIT + img_unit]: # 합칠 이미지 단위 만큼만
+        # print(file)
         #지금 이미지를 im에 넣기
         im = PILImage.open(img_dir + '/' + file)
         #가로, 세로 size를 지금 들러온 im에 맞춘다
@@ -104,6 +106,7 @@ def merge_img(file_list = file_list, img_unit = 20, quotient = 'none', remainder
 
     # 리스트에 있는 이미지를 캔버스에 덮어씌우기
     for im in image_list: # 이미지 하나하나, final_image_list는 im을 모아놓은 리스트
+        # print(im)
         # 현재 이미지의 사이즈를 가로세로 변수에 넣는다
         width, height = im.size
         # 캔버스에 현재 이미지를 붙여넣고(x축0, y축누적높이)
@@ -134,14 +137,18 @@ for ep_num in ep_num_list:
 
     # 크롤링 한 파일 불러오고
     file_list = load_files()
+    print('파일길이: ' + str(len(file_list)))
+
     # 이미지 총개수를 단위로 나누기
-    quotient, remainder = divmod(len(file_list), img_unit) # 나누기의 몫과 나머지
+    quotient, remainder = divmod(len(file_list), IMG_UNIT) # 나누기의 몫과 나머지
+    print('몫과 나머지: ' + str(quotient) + ', ' + str(remainder))
 
     # 병합하기
     for i in range(quotient + 1):
 
         if i == (quotient): # 마지막 반복만
             # remainder
-            merge_img(file_list = file_list, quotient = quotient, remainder = remainder, ep_num = ep_num)
+            if(remainder == 0): break # 만약 딱 나눠 떨어진다면 예외처리
+            merge_img(file_list = file_list, start_point = i, quotient = quotient, remainder = remainder, ep_num = ep_num)
         else:
-            merge_img(file_list = file_list, quotient = quotient, ep_num = ep_num)
+            merge_img(file_list = file_list, start_point = i, quotient = quotient, ep_num = ep_num)
