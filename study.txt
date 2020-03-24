@@ -2,3 +2,27 @@ OSError: encoder error -2 when writing image file
 캔버스가 65500 높이 넘어가는 데
 canvas.save( './result/' + 'merged.jpg')
 이거 실행해서
+
+
+git init
+(한후에 원격지 레파지토리 만들고)
+
+git remote add origin  https://github.com/dnd88/web_crawler.git
+(원격지 알려주기)
+
+git add .
+(전부 스테이징하기)
+git rm -r --cached 내릴파일혹은폴더명
+(스테이지 올린것중 내릴것)
+git status
+(스테이징 확인)
+
+git config --local user.email "dndwjd88@gmail.com"
+git config --local user.name "dnd88"
+git commit
+git push origin master
+
+원격지의 파일 지우고 싶을때
+로컬에서 지우고 푸시 
+git rm -rf 지울폴더나파일명
+git push -u origin master
