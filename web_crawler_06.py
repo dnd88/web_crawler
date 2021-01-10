@@ -12,7 +12,7 @@ sub_dir = ''
 result_img_dir = './result'
 
 result_name = '테러맨'
-url = 'https://comic.naver.com/webtoon/detail.nhn?titleId=670149&no=1&weekday=fri'
+url = 'https://comic.naver.com/webtoon/detail.nhn?titleId=670144&no=1&weekday=thu'
 
 
 file_list = []
